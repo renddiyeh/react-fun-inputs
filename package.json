@@ -1,0 +1,50 @@
+{
+  "name": "react-fun-inputs",
+  "version": "0.1.0",
+  "private": true,
+  "author": "renddi@relab.cc",
+  "license": "MIT",
+  "dependencies": {
+    "babel-core": "6.26.0",
+    "babel-eslint": "7.2.3",
+    "babel-loader": "7.1.2",
+    "babel-preset-react-app": "^3.1.1",
+    "clean-tag": "^1.0.4",
+    "eslint": "4.10.0",
+    "eslint-config-react-app": "^2.1.0",
+    "eslint-plugin-flowtype": "2.39.1",
+    "eslint-plugin-import": "2.8.0",
+    "eslint-plugin-jsx-a11y": "5.1.1",
+    "eslint-plugin-react": "7.4.0",
+    "hammerjs": "^2.0.8",
+    "lodash": "^4.17.5",
+    "react": "^16.2.0",
+    "react-dom": "^16.2.0",
+    "rematrix": "^0.2.2",
+    "sanitize.css": "^5.0.0",
+    "styled-components": "^3.1.6",
+    "styled-system": "^2.1.1",
+    "subscribe-ui-event": "^1.1.1"
+  },
+  "scripts": {
+    "start": "npm run storybook",
+    "build": "node scripts/build.js",
+    "storybook": "start-storybook -p 9009 -s public",
+    "deploy-storybook": "storybook-to-ghpages",
+    "build-storybook": "build-storybook -s public"
+  },
+  "devDependencies": {
+    "@storybook/addon-actions": "^3.3.14",
+    "@storybook/addon-links": "^3.3.14",
+    "@storybook/react": "^3.3.14",
+    "@storybook/storybook-deployer": "^2.3.0"
+  },
+  "babel": {
+    "presets": [
+      "react-app"
+    ]
+  },
+  "eslintConfig": {
+    "extends": "react-app"
+  }
+}
