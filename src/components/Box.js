@@ -35,8 +35,8 @@ const Box = styled(tag)`
   ${fontSize}
 `;
 
-Box.relative = props => <Box {...props} position="relative" />;
-Box.absolute = props => <Box {...props} position="absolute" />;
-Box.fixed = props => <Box {...props} position="fixed" />;
+Box.relative = (props) => <Box {...props} position="relative" />;
+Box.absolute = (props) => <Box {...props} position="absolute" />;
+Box.fixed = (props) => <Box {...props} position="fixed" />;
 
 export default Box;

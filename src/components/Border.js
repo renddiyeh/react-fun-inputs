@@ -2,7 +2,7 @@ import {
   border,
   borderTop,
   borderRight,
-  borderBottom ,
+  borderBottom,
   borderLeft,
   borderColor,
   borderRadius,
@@ -14,7 +14,7 @@ export default Box.extend`
   ${border}
   ${borderTop}
   ${borderRight}
-  ${borderBottom }
+  ${borderBottom}
   ${borderLeft}
   ${borderColor}
   ${borderRadius}

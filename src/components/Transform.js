@@ -10,6 +10,7 @@ import isNumber from 'lodash/isNumber';
 import parsePercent from '../utils/parsePercent';
 import Box from './Box';
 
+/* eslint-disable no-param-reassign */
 function setTransform(element, transfromString) {
   if (!element) return;
   element.style.webkitTransform = transfromString;
@@ -18,6 +19,7 @@ function setTransform(element, transfromString) {
   element.style.OTransform = transfromString;
   element.style.transform = transfromString;
 }
+/* eslint-enable no-param-reassign */
 
 const avalibleTransforms = [
   'translate',
@@ -52,8 +54,8 @@ const createCompnent = (...styles) => {
       const transforms = Object.entries(attrs).map(([key, value]) => {
         if (startsWith(key, 'translate')) return this.parseTranslate(key, value);
         return Rematrix[key](value);
-      })
-      const matrix = [this.matrix, ...transforms].reduce(Rematrix.multiply)
+      });
+      const matrix = [this.matrix, ...transforms].reduce(Rematrix.multiply);
       setTransform(this.element, `matrix3d(${matrix.join(',')}`);
     }
 
@@ -104,7 +106,7 @@ const createCompnent = (...styles) => {
   };
 
   return Transform;
-}
+};
 
 const Comp = createCompnent();
 

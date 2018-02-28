@@ -1,16 +1,16 @@
-import React, { PureComponent } from 'react';
+import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import Hammer from 'hammerjs';
 import round from 'lodash/round';
 import clamp from 'lodash/clamp';
 
-import { cartesianToPolar } from '../utils/coordinates';
+import DragToRotate from './utils/DragToRotate';
 
-import withResizeListener from '../hoc/withResizeListener';
-import Border from '../components/Border';
-import Box from '../components/Box';
-import Input from '../components/Input';
-import Transform from '../components/Transform';
+import withResizeListener from './hoc/withResizeListener';
+import Border from './components/Border';
+import Box from './components/Box';
+import Input from './components/Input';
+import Transform from './components/Transform';
 
 const getAngle = (value, hours) => {
   const base = hours ? 12 * 60 : 60;
@@ -26,11 +26,9 @@ const Tick = Transform.extend`
   ${({ draggable }) => draggable && 'cursor: pointer;'}
 `;
 
-const normalizAngle = (a) => a < 0 ? a + 360 : a;
-const valueToAngle = (value) => (((value % 60) / 60) * 360) - 90;
 const angleToValue = (angle) => (angle / 360) * 60;
 
-class Clock extends PureComponent {
+class Clock extends Component {
   constructor(props) {
     super(props);
     this.setContants();
@@ -42,14 +40,19 @@ class Clock extends PureComponent {
   }
 
   componentDidMount() {
+    this.dragging = new DragToRotate(this.getOrigin());
     this.hammertime = new Hammer(this.tick);
     this.hammertime.on('panmove', this.handleDrag);
     this.hammertime.on('panend', this.handleDragEnd);
-    this.setOrigin();
   }
 
   setContants = (props = this.props) => {
-    const { precision, min, max, hours } = props;
+    const {
+      precision,
+      min,
+      max,
+      hours,
+    } = props;
     this.threshold = 30;
     this.unit = hours ? 60 : 1;
     this.format = (v) => round(v, precision);
@@ -57,35 +60,24 @@ class Clock extends PureComponent {
   }
 
   setValue = (v) => {
-    const value = this.clamp(v)
+    const value = this.clamp(v);
     const displayValue = this.format(value / this.unit);
     this.setState({ value, displayValue });
   }
 
-  setOrigin = () => {
-    const { left, top, right, bottom } = this.container.getBoundingClientRect()
-    this.origin = [(left + right) / 2, (top + bottom) / 2];
-  }
-
-  handleResize = () => {
-    this.setOrigin();
+  getOrigin = () => {
+    const {
+      left,
+      top,
+      right,
+      bottom,
+    } = this.container.getBoundingClientRect();
+    return [(left + right) / 2, (top + bottom) / 2];
   }
 
   handleDrag = ({ center: { x, y } }) => {
     const { value } = this.state;
-    const polar = cartesianToPolar([x, y], this.origin, true);
-    const targetTheta = normalizAngle(polar[1]);
-    const curentTheta = normalizAngle(valueToAngle(value / this.unit));
-    let delta = targetTheta - curentTheta;
-
-    const absDelta = Math.abs(delta);
-    if (absDelta > 300) {
-      if (delta < 0) {
-        delta = delta + 360;
-      } else {
-        delta = delta - 360;
-      }
-    }
+    const delta = this.dragging.parseDrag([x, y]);
     const offset = this.format(angleToValue(delta));
     if (Math.abs(offset) < this.threshold) {
       this.setValue(value + (offset * this.unit));
@@ -137,7 +129,7 @@ class Clock extends PureComponent {
               height="33%"
               draggable={hours}
               zIndex={+hours}
-              innerRef={(ref) => { hours && (this.tick = ref); }}
+              innerRef={(ref) => { if (hours) this.tick = ref; }}
               translateX="-50%"
               translateY="-90%"
               rotate={getAngle(value, true)}
@@ -147,7 +139,7 @@ class Clock extends PureComponent {
               height="45%"
               draggable={!hours}
               zIndex={+!hours}
-              innerRef={(ref) => { !hours && (this.tick = ref); }}
+              innerRef={(ref) => { if (!hours) this.tick = ref; }}
               translateX="-50%"
               translateY="-90%"
               rotate={getAngle(value)}
@@ -174,6 +166,9 @@ Clock.propTypes = {
   hours: PropTypes.bool,
   showArea: PropTypes.bool,
   precision: PropTypes.number,
+  border: PropTypes.string,
+  borderWidth: PropTypes.string,
+  borderColor: PropTypes.string,
 };
 
 Clock.defaultProps = {

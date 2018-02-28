@@ -6,8 +6,10 @@
   "license": "MIT",
   "dependencies": {
     "clean-tag": "^1.0.4",
+    "d3": "^4.13.0",
     "hammerjs": "^2.0.8",
     "lodash": "^4.17.5",
+    "open-color": "^1.6.2",
     "react": "^16.2.0",
     "react-dom": "^16.2.0",
     "rematrix": "^0.2.2",
@@ -21,7 +23,7 @@
     "build": "cross-env NODE_ENV=production babel src -d dist",
     "storybook": "start-storybook -p 9009",
     "build-storybook": "build-storybook",
-    "deploy-storybook": "storybook-to-ghpages"
+    "deploy-storybook": "storybook-to-ghpages -- --existing-output-dir=storybook-static"
   },
   "devDependencies": {
     "@storybook/addon-actions": "^3.3.14",
@@ -33,11 +35,10 @@
     "babel-loader": "7.1.2",
     "babel-preset-react-app": "^3.1.1",
     "cross-env": "^5.1.3",
-    "eslint": "4.10.0",
-    "eslint-config-react-app": "^2.1.0",
-    "eslint-plugin-flowtype": "2.39.1",
-    "eslint-plugin-import": "2.8.0",
-    "eslint-plugin-jsx-a11y": "5.1.1",
+    "eslint": "4.9.0",
+    "eslint-config-airbnb": "16.1.0",
+    "eslint-plugin-import": "2.7.0",
+    "eslint-plugin-jsx-a11y": "6.0.2",
     "eslint-plugin-react": "7.4.0"
   },
   "babel": {

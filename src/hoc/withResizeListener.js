@@ -13,6 +13,14 @@ export default (Comp) => {
       this.subscription.unsubscribe();
     }
 
+    onResize = (event) => {
+      const instance = this.getInstance();
+
+      if (typeof instance.handleResize === 'function') {
+        instance.handleResize(event);
+      }
+    }
+
     getInstance() {
       if (!Comp.prototype.isReactComponent) {
         return this;
@@ -21,19 +29,10 @@ export default (Comp) => {
       return ref.getInstance ? ref.getInstance() : ref;
     }
 
-    getRef = ref => (this.instanceRef = ref);
-
-    onResize = (event) => {
-      const instance = this.getInstance();
-
-      if (typeof instance.handleResize === 'function') {
-        instance.handleResize(event);
-        return;
-      }
-    }
+    getRef = (ref) => { this.instanceRef = ref; }
 
     render() {
-      let { ...props } = this.props;
+      const { ...props } = this.props;
       if (Comp.prototype.isReactComponent) {
         Object.assign(props, { ref: this.getRef });
       } else {
@@ -45,4 +44,4 @@ export default (Comp) => {
   }
 
   return Resizable;
-}
+};
