@@ -6,7 +6,6 @@ import clamp from 'lodash/clamp';
 
 import DragToRotate from './utils/DragToRotate';
 
-import withResizeListener from './hoc/withResizeListener';
 import Border from './components/Border';
 import Box from './components/Box';
 import Input from './components/Input';
@@ -75,7 +74,7 @@ class Clock extends Component {
 
   handleDrag = ({ center: { x, y } }) => {
     const target = this.dragging.parseDrag([x, y]);
-    const offset = this.format(target * 60);
+    const offset = this.format(target * 60) * this.unit;
     this.setValue(offset);
   }
 
@@ -174,4 +173,4 @@ Clock.defaultProps = {
   max: Infinity,
 };
 
-export default withResizeListener(Clock);
+export default Clock;

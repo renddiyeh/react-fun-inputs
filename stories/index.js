@@ -7,6 +7,7 @@ import { action } from '@storybook/addon-actions';
 import Clock from '../src/Clock';
 import Pie from '../src/Pie';
 import D3Clock from '../src/D3Clock';
+import Radar from '../src/Radar';
 
 storiesOf('Clock', module)
   .add('Clock', () => <Clock w="20em" onChange={action('onChange')} />)
@@ -17,3 +18,6 @@ storiesOf('Clock', module)
 
 storiesOf('Pie', module)
   .add('Pie', () => <Pie w="20em" onChange={action('onChange')} />);
+
+storiesOf('Radar', module)
+  .add('Radar', () => <Radar />);
