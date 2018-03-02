@@ -26,8 +26,6 @@ const Tick = Transform.extend`
   ${({ draggable }) => draggable && 'cursor: pointer;'}
 `;
 
-const angleToValue = (angle) => (angle / 360) * 60;
-
 class Clock extends Component {
   constructor(props) {
     super(props);
@@ -59,8 +57,8 @@ class Clock extends Component {
     this.clamp = (v) => clamp(v, min * this.unit, max * this.unit);
   }
 
-  setValue = (v) => {
-    const value = this.clamp(v);
+  setValue = (offset) => {
+    const value = this.clamp(this.state.value + offset);
     const displayValue = this.format(value / this.unit);
     this.setState({ value, displayValue });
   }
@@ -76,12 +74,9 @@ class Clock extends Component {
   }
 
   handleDrag = ({ center: { x, y } }) => {
-    const { value } = this.state;
-    const delta = this.dragging.parseDrag([x, y]);
-    const offset = this.format(angleToValue(delta));
-    if (Math.abs(offset) < this.threshold) {
-      this.setValue(value + (offset * this.unit));
-    }
+    const target = this.dragging.parseDrag([x, y]);
+    const offset = this.format(target * 60);
+    this.setValue(offset);
   }
 
   handleDragEnd = () => {

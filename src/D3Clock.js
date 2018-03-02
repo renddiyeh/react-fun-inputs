@@ -186,7 +186,6 @@ class D3Clock extends Component {
       .attr('transform', (d) => `rotate(${d.scale(d.value)})`)
       .call(drag().container(this.container)
         .filter(this.canDrag)
-        .on('start', this.handleDragStart)
         .on('end', this.handleDragEnd)
         .on('drag', this.handleDrag));
     this.hands = select('#clock-hands').selectAll('line');
@@ -226,15 +225,10 @@ class D3Clock extends Component {
     }
   }
 
-  handleDragStart = () => {
-    const { x, y } = event;
-    this.dragging.setDragStart([x, y]);
-  }
-
   handleDrag = () => {
     const { x, y } = event;
     const delta = this.dragging.parseDrag([x, y]);
-    this.updateValue(this.state.displayValue + this.angleToValue(delta));
+    this.updateValue(this.state.displayValue + (delta * 60));
   }
 
   handleInputChange = (e) => {

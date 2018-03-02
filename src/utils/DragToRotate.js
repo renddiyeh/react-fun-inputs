@@ -2,10 +2,9 @@ import isArray from 'lodash/isArray';
 import isNumber from 'lodash/isNumber';
 
 const degPerRadian = 180 / Math.PI;
-const cartesianToPolar = (xy, center, isDegree) => {
+const getRotate = (xy, center) => {
   let x;
   let y;
-  let t;
   if (!isArray(xy) && xy.length !== 2) {
     throw new TypeError('expected [x, y] xy array');
   }
@@ -17,15 +16,12 @@ const cartesianToPolar = (xy, center, isDegree) => {
     x -= center[0];
     y -= center[1];
   }
-  const r = Math.sqrt((x * x) + (y * y));
-  t = Math.atan2(y, x);
-  if (isDegree) t *= degPerRadian;
-  return [r, t];
+  return Math.atan2(y, x) + (Math.PI / 2);
 };
 
-const normalizAngle = (a) => (a < 0 ? a + 360 : a);
 const radianToDegree = (r) => r * degPerRadian;
 const degreenToRadian = (d) => d / degPerRadian;
+const angleToValue = (angle) => angle / Math.PI / 2;
 
 export {
   radianToDegree,
@@ -42,35 +38,39 @@ export default class DragToRotate {
   }
 
   setDragStart = (point) => {
-    this.startAngle = this.pointToAngle(point);
+    const startAngle = this.pointToAngle(point);
+    this.lastAngle = startAngle;
+    this.lastValue = angleToValue(startAngle);
   }
 
   setCenter = (point) => {
     this.center = point;
   }
 
-  pointToAngle = (point) => normalizAngle(cartesianToPolar(point, this.center, true)[1])
+  pointToAngle = (point) => getRotate(point, this.center)
 
   parseDrag = (point) => {
     const angle = this.pointToAngle(point);
-    if (!isNumber(this.startAngle)) {
-      this.startAngle = angle;
+    if (!isNumber(this.lastAngle)) {
+      this.lastAngle = angle;
+      this.lastValue = angleToValue(angle);
       return 0;
     }
-    let delta = angle - this.startAngle;
-    this.startAngle = angle;
-    const absDelta = Math.abs(delta);
-    if (absDelta > 300) {
-      if (delta < 0) {
-        delta += 360;
-      } else {
-        delta -= 360;
-      }
+    let delta = angle - this.lastAngle;
+
+    if (delta < 0) {
+      delta += Math.PI * 2;
     }
-    return delta;
+    if (delta > Math.PI) {
+      delta -= Math.PI * 2;
+    }
+    const deltaValue = angleToValue(delta);
+    this.lastValue += deltaValue;
+    this.lastAngle = angle;
+    return deltaValue;
   }
 
   clear = () => {
-    this.startAngle = null;
+    this.lastAngle = null;
   }
 }
